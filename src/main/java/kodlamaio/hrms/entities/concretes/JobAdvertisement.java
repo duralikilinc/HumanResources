@@ -51,6 +51,9 @@ public class JobAdvertisement {
 	@ManyToOne
 	@JoinColumn(name = "city_id")
 	private City city;
+	
+	@Column(name = "description")
+	private String description;
 
 	@Column(name = "min_salary", nullable = true)
 	private BigDecimal min_salary;
