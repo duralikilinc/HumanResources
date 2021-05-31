@@ -1,5 +1,6 @@
 package kodlamaio.hrms.business.concretes;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import kodlamaio.hrms.business.abstracts.JobAdvertisementService;
 import kodlamaio.hrms.core.utilities.results.DataResult;
-import kodlamaio.hrms.core.utilities.results.ErrorResult;
 import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.core.utilities.results.SuccessDataResult;
 import kodlamaio.hrms.core.utilities.results.SuccessResult;
@@ -27,7 +27,7 @@ import org.springframework.data.domain.Sort;
 public class JobAdvertisementManager implements JobAdvertisementService {
 
 	private JobAdvertisementDao jobAdvertisementDao;
-	//private org.modelmapper.ModelMapper modelMapper;
+	// private org.modelmapper.ModelMapper modelMapper;
 
 	@Override
 	public DataResult<List<JobAdvertisement>> getByEmployer(int employer_id) {
@@ -69,11 +69,7 @@ public class JobAdvertisementManager implements JobAdvertisementService {
 	public Result add(JobAdvertisementRegisterDto jobAdvertisement) {
 
 		JobAdvertisement advertisement = convertToJobAdvertisementRegisterDto(jobAdvertisement);
-
-		
-			this.jobAdvertisementDao.save(advertisement);
-		
-		
+		this.jobAdvertisementDao.saveAndFlush(advertisement);
 
 		return new SuccessResult("İş ilanı eklendi");
 
@@ -87,9 +83,29 @@ public class JobAdvertisementManager implements JobAdvertisementService {
 				"Data listed.");
 	}
 
+	@Override
+	public DataResult<List<JobAdvertisementDto>> findByLastDateBetween(Date startDate, Date finishDate) {
+
+		return new SuccessDataResult<List<JobAdvertisementDto>>(
+				((List<JobAdvertisement>) this.jobAdvertisementDao.findByLastDateBetween(startDate, finishDate))
+						.stream().map(this::convertToJobAdvertisementDTO).collect(Collectors.toList()),
+				"Tarihe göre listelendi");
+	}
+
+	@Override
+	public Result changeStatus(boolean isActive, int jobAdvertisementId) {
+
+		var jobAdvertisement = this.jobAdvertisementDao.getById(jobAdvertisementId);
+		jobAdvertisement.setAktive(isActive);
+		this.jobAdvertisementDao.save(jobAdvertisement);
+
+		return (isActive == true ? new SuccessResult("job advertisement has been activated")
+				: new SuccessResult("job advertisement has been deactivated"));
+	}
+
 	private JobAdvertisementDto convertToJobAdvertisementDTO(JobAdvertisement advertisement) {
 
-		org.modelmapper.ModelMapper modelMapper=new ModelMapper();
+		org.modelmapper.ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 		JobAdvertisementDto jobAdversimentDto = modelMapper.map(advertisement, JobAdvertisementDto.class);
 		return jobAdversimentDto;
@@ -97,8 +113,9 @@ public class JobAdvertisementManager implements JobAdvertisementService {
 
 	private JobAdvertisement convertToJobAdvertisementRegisterDto(
 			JobAdvertisementRegisterDto advertisementRegisterDto) {
-		org.modelmapper.ModelMapper modelMapper=new ModelMapper();
+		org.modelmapper.ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(advertisementRegisterDto, JobAdvertisement.class);
 
 	}
+
 }

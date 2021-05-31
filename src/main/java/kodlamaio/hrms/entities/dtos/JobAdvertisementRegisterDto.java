@@ -1,7 +1,6 @@
 package kodlamaio.hrms.entities.dtos;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +27,7 @@ public class JobAdvertisementRegisterDto {
 
 	private int personel_number;
 
-	private LocalDate lastDate;
+	private Date lastDate;
 
 	private boolean isAktive;
 }

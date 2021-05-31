@@ -1,8 +1,8 @@
 package kodlamaio.hrms.entities.concretes;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -65,7 +66,8 @@ public class JobAdvertisement {
 	private int personel_number;
 
 	@Column(name = "last_date")
-	private LocalDate lastDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date lastDate;
 
 	@Column(name = "is_aktive")
 	private boolean isAktive;

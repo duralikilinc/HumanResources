@@ -1,7 +1,10 @@
 package kodlamaio.hrms.entities.dtos;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +37,8 @@ public class JobAdvertisementDto {
 
 	private int personel_number;
 
-	private LocalDate lastDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date lastDate;
 
 	private boolean isAktive;
 

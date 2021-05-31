@@ -1,5 +1,6 @@
 package kodlamaio.hrms.dataAccess.abstracts;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,10 +15,12 @@ public interface JobAdvertisementDao extends JpaRepository<JobAdvertisement, Int
 	List<JobAdvertisement> findAllByisAktiveTrue();
 
 	List<JobAdvertisement> findAllByisAktiveTrue(Sort sort);
-	
-	@Query("Update JobAdvertisement Set isActive =: isActive where id =: jobAdvertisementId")
-	void updateActivationStatus(boolean isActive, int jobAdvertisementId);
-	
-	
+
+//	@Query("Update JobAdvertisement Set isActive =: isActive where id =:jobAdvertisementId")
+//	void updateActivationStatus(boolean isActive, int jobAdvertisementId);
+
+	List<JobAdvertisement> findByLastDateBetween(Date startDate, Date finishDate);
+
+	JobAdvertisement getById(int id);
 	
 }

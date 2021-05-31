@@ -1,5 +1,6 @@
 package kodlamaio.hrms.business.abstracts;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -9,6 +10,7 @@ import kodlamaio.hrms.core.utilities.results.Result;
 import kodlamaio.hrms.entities.concretes.JobAdvertisement;
 import kodlamaio.hrms.entities.dtos.JobAdvertisementDto;
 import kodlamaio.hrms.entities.dtos.JobAdvertisementRegisterDto;
+
 
 public interface JobAdvertisementService {
 
@@ -25,4 +27,10 @@ public interface JobAdvertisementService {
 	Result add(JobAdvertisementRegisterDto jobAdvertisement);
 	
 	DataResult<List<JobAdvertisementDto>> getAllJobAdvertisement();
+	
+	DataResult<List<JobAdvertisementDto>> findByLastDateBetween(Date startDate,Date finishDate);
+	
+	Result changeStatus(boolean isActive, int jobAdvertisementId);
+	
+	
 }

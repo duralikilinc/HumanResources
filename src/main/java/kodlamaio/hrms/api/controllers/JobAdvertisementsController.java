@@ -1,8 +1,10 @@
 package kodlamaio.hrms.api.controllers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,9 +53,24 @@ public class JobAdvertisementsController {
 		return this.jobAdvertisementService.getBySortedByLastDate();
 	}
 
+	@GetMapping("/getAllDateBetween")
+	public DataResult<List<JobAdvertisementDto>> findByLastDateBetween(
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date finishDate) {
+		return this.jobAdvertisementService.findByLastDateBetween(startDate, finishDate);
+
+	}
+
+	@PostMapping("/updateStatus")
+	public Result changeStatus( boolean isActive,  int jobAdvertisementId) {
+
+		return this.jobAdvertisementService.changeStatus(isActive, jobAdvertisementId);
+	}
+
 	@PostMapping("/add")
 	public Result add(@RequestBody JobAdvertisementRegisterDto advertisement) {
-		
+
 		return this.jobAdvertisementService.add(advertisement);
 	}
+
 }
