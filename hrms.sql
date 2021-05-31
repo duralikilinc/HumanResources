@@ -5,7 +5,7 @@
 -- Dumped from database version 13.2
 -- Dumped by pg_dump version 13.2
 
--- Started on 2021-05-27 12:56:16
+-- Started on 2021-05-31 15:13:49
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -21,6 +21,19 @@ SET row_security = off;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- TOC entry 207 (class 1259 OID 17013)
+-- Name: cities; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.cities (
+    id integer NOT NULL,
+    city_name character varying(255)
+);
+
+
+ALTER TABLE public.cities OWNER TO postgres;
 
 --
 -- TOC entry 202 (class 1259 OID 16843)
@@ -39,6 +52,52 @@ CREATE TABLE public.employers (
 
 
 ALTER TABLE public.employers OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 17020)
+-- Name: job_advertisemens; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.job_advertisemens (
+    id integer NOT NULL,
+    description character varying(255),
+    is_aktive boolean,
+    last_date date,
+    max_salary numeric(19,2),
+    min_salary numeric(19,2),
+    personel_number integer,
+    city_id integer,
+    employer_id integer,
+    job_position_id integer
+);
+
+
+ALTER TABLE public.job_advertisemens OWNER TO postgres;
+
+--
+-- TOC entry 208 (class 1259 OID 17018)
+-- Name: job_advertisemens_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.job_advertisemens_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.job_advertisemens_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3040 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: job_advertisemens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.job_advertisemens_id_seq OWNED BY public.job_advertisemens.id;
+
 
 --
 -- TOC entry 206 (class 1259 OID 16874)
@@ -131,7 +190,24 @@ ALTER TABLE public.users ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 2870 (class 2606 OID 16905)
+-- TOC entry 2879 (class 2604 OID 17023)
+-- Name: job_advertisemens id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.job_advertisemens ALTER COLUMN id SET DEFAULT nextval('public.job_advertisemens_id_seq'::regclass);
+
+
+--
+-- TOC entry 2896 (class 2606 OID 17017)
+-- Name: cities cities_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.cities
+    ADD CONSTRAINT cities_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2881 (class 2606 OID 16905)
 -- Name: users email_uk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -140,7 +216,25 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 2881 (class 2606 OID 16878)
+-- TOC entry 2885 (class 2606 OID 17037)
+-- Name: employers employers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employers
+    ADD CONSTRAINT employers_pkey PRIMARY KEY (employer_id);
+
+
+--
+-- TOC entry 2898 (class 2606 OID 17025)
+-- Name: job_advertisemens job_advertisemens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.job_advertisemens
+    ADD CONSTRAINT job_advertisemens_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2894 (class 2606 OID 16878)
 -- Name: job_positions job_position_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -149,7 +243,7 @@ ALTER TABLE ONLY public.job_positions
 
 
 --
--- TOC entry 2874 (class 2606 OID 16852)
+-- TOC entry 2887 (class 2606 OID 16852)
 -- Name: job_seekers job_seekers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -158,7 +252,7 @@ ALTER TABLE ONLY public.job_seekers
 
 
 --
--- TOC entry 2879 (class 2606 OID 16857)
+-- TOC entry 2892 (class 2606 OID 16857)
 -- Name: systemusers systemusers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -167,7 +261,7 @@ ALTER TABLE ONLY public.systemusers
 
 
 --
--- TOC entry 2876 (class 2606 OID 16903)
+-- TOC entry 2889 (class 2606 OID 16903)
 -- Name: job_seekers uk_tc; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -176,7 +270,7 @@ ALTER TABLE ONLY public.job_seekers
 
 
 --
--- TOC entry 2872 (class 2606 OID 16842)
+-- TOC entry 2883 (class 2606 OID 16842)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -185,7 +279,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 2877 (class 1259 OID 16901)
+-- TOC entry 2890 (class 1259 OID 16901)
 -- Name: fki_fk_jobId; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -193,16 +287,16 @@ CREATE INDEX "fki_fk_jobId" ON public.systemusers USING btree (job_id);
 
 
 --
--- TOC entry 2885 (class 2606 OID 16910)
--- Name: systemusers fk_jobposition; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- TOC entry 2902 (class 2606 OID 17026)
+-- Name: job_advertisemens fk64p84eaonek7uhujv6t0tkg6k; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.systemusers
-    ADD CONSTRAINT fk_jobposition FOREIGN KEY (job_id) REFERENCES public.job_positions(id) NOT VALID;
+ALTER TABLE ONLY public.job_advertisemens
+    ADD CONSTRAINT fk64p84eaonek7uhujv6t0tkg6k FOREIGN KEY (city_id) REFERENCES public.cities(id);
 
 
 --
--- TOC entry 2882 (class 2606 OID 16881)
+-- TOC entry 2899 (class 2606 OID 16881)
 -- Name: employers fk_userId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -211,7 +305,7 @@ ALTER TABLE ONLY public.employers
 
 
 --
--- TOC entry 2883 (class 2606 OID 16886)
+-- TOC entry 2900 (class 2606 OID 16886)
 -- Name: job_seekers fk_userId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -220,7 +314,7 @@ ALTER TABLE ONLY public.job_seekers
 
 
 --
--- TOC entry 2884 (class 2606 OID 16891)
+-- TOC entry 2901 (class 2606 OID 16891)
 -- Name: systemusers fk_userId; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -228,7 +322,25 @@ ALTER TABLE ONLY public.systemusers
     ADD CONSTRAINT "fk_userId" FOREIGN KEY (admin_id) REFERENCES public.users(id) NOT VALID;
 
 
--- Completed on 2021-05-27 12:56:16
+--
+-- TOC entry 2904 (class 2606 OID 17038)
+-- Name: job_advertisemens fkcx4i3x5q89j6mnb79txj9ln5l; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.job_advertisemens
+    ADD CONSTRAINT fkcx4i3x5q89j6mnb79txj9ln5l FOREIGN KEY (employer_id) REFERENCES public.employers(employer_id);
+
+
+--
+-- TOC entry 2903 (class 2606 OID 17031)
+-- Name: job_advertisemens fkoy80hyth0mx54cbfy8lbrmww9; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.job_advertisemens
+    ADD CONSTRAINT fkoy80hyth0mx54cbfy8lbrmww9 FOREIGN KEY (job_position_id) REFERENCES public.job_positions(id);
+
+
+-- Completed on 2021-05-31 15:13:49
 
 --
 -- PostgreSQL database dump complete
